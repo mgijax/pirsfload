@@ -1,0 +1,211 @@
+#format: sh
+#
+#  config.default
+#
+#  This file sets up environment variables that are needed for the
+#  PIRSF Load
+#
+###########################################################################
+
+# parameters for vocload
+
+VOCLOAD_COMMAND_PATH=${USRLOCALMGI}/dataload/vocload/simpleLoad.py
+VOCLOAD_RCD_FILENAME=${USRLOCALMGI}/dataload/vocload/simple.rcd
+VOCLOAD_NAME="PIR Superfamily"
+VOCLOAD_OUTPUTDIR=output
+
+# parameters for annotload
+
+CMD_ANNOTLOAD_PATH=${USRLOCALMGI}/dataload/annotload/annotload.py
+CMD_ANNOTLOAD_MODE=new
+CMD_ANNOTLOAD_TYPE=PIRSF/Marker
+CMD_ANNOTLOAD_JNUMBER="J:99750"
+
+
+###########################################################################
+#
+#  GENERAL SETTINGS
+#
+###########################################################################
+
+#  Installation directory for the GenBank sequence load
+INSTALLDIR=/home/mbw/sandbox/pirsfload
+
+export INSTALLDIR
+
+###########################################################################
+#
+#  DATABASE SETTINGS BY DATABASE
+#
+###########################################################################
+
+# MGD Connection parameters 
+MGD_DBSERVER=PROD_MGI
+
+MGD_DBURL=shire.informatics.jax.org:4100
+
+MGD_DBNAME=mgd
+
+MGD_DBUSER=mgd_dbo
+MGD_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
+
+MGD_DBSCHEMADIR=${MGDDBSCHEMADIR}
+
+export MGD_DBSERVER MGD_DBURL MGD_DBNAME
+export MGD_DBUSER MGD_DBPASSWORDFILE MGD_DBSCHEMADIR
+
+# RADAR Connection parameters 
+RADAR_DBSERVER=PROD_MGI
+
+RADAR_DBURL=shire.informatics.jax.org:4100
+
+RADAR_DBNAME=radar
+
+RADAR_DBUSER=mgd_dbo
+RADAR_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
+
+RADAR_DBSCHEMADIR=${RADARDBSCHEMADIR}
+
+export RADAR_DBSERVER RADAR_DBURL RADAR_DBNAME RADAR_DBUSER 
+export RADAR_DBPASSWORDFILE RADAR_DBSCHEMADIR 
+
+###########################################################################
+#
+#  SOFTWARE SETTINGS
+#
+###########################################################################
+
+JAVARUNTIMEOPTS="-Xms1000m -Xmx1000m"
+
+JAVA_LIB=${JAVAPATH}/dla.jar:${JAVAPATH}/core.jar:${JAVAPATH}/dbsmgd.jar:${JAVAPATH}/dbsrdr.jar:/usr/local/java1.4/lib/jsr173_1.0_api.jar:/usr/local/java1.4/lib/jsr173_1.0_ri.jar
+
+CLASSPATH=.:${INSTALLDIR}/classes:${JAVA_LIB}:${COMMON_CLASSPATH}
+
+export JAVARUNTIMEOPTS JAVA_LIB CLASSPATH
+
+###########################################################################
+#
+#  LOAD SPECIFIC SETTINGS
+#
+###########################################################################
+
+# this load's MGI_User login value for DB tables CreatedBy and ModifiedBy column
+JOBSTREAM=PIRSF_Load
+
+#  Java applications
+DLA_LOADER=org.jax.mgi.app.pirsfload.PIRSFLoad
+DLA_START=org.jax.mgi.shr.dla.loader.DLAStart
+
+# SQL STREAM
+# this overrides the default BCP_Inline_Stream
+DLA_DB_PREFIX=MGD
+DLA_LOAD_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
+DLA_QC_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
+
+# QC report script
+APP_QCRPT=${QCRPTDIR}/pirsfload/pirsfloadRpt.csh
+
+export DLA_LOADER DLA_START DLA_LOAD_STREAM 
+export APP_QCRPT
+
+# Full path the the logs, reports, and archive directories
+FILEDIR=/data/loads/pirsf/pirsfload
+LOGDIR=${FILEDIR}/logs
+RPTDIR=${FILEDIR}/reports
+ARCHIVEDIR=${FILEDIR}/archive
+OUTPUTDIR=${FILEDIR}/output
+
+export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
+
+# full path to input file directory when APP_RADAR_INPUT=false
+# currently not used by mouse which instead uses DP tables in RADAR
+INPUTDIR=${FILEDIR}/input
+
+INFILE_NAME=${INPUTDIR}/iproclass_mouse_07072005.xml
+
+export INPUTDIR INFILE_NAME
+
+
+#  Complete path name of the log files
+LOG_PROC=${LOGDIR}/pirsfload.proc.log
+LOG_DIAG=${LOGDIR}/pirsfload.diag.log
+LOG_CUR=${LOGDIR}/pirsfload.cur.log
+LOG_VAL=${LOGDIR}/pirsfload.val.log
+
+# Send debug messages to the diagnostic log
+LOG_DEBUG=false
+DBDEBUG=false
+CACHE_DEBUG=false
+
+# logger factory class - allows classes to get their own loggers
+LOG_FACTORY=org.jax.mgi.shr.dla.log.DLALoggerFactory
+
+export LOG_PROC LOG_DIAG LOG_CUR LOG_VAL LOG_DEBUG 
+export CACHE_DEBUG LOG_FACTORY
+
+###########################################################################
+#
+#  BCP MANAGER SETTINGS BY DATABASE
+#
+###########################################################################
+
+#  Settings used to create a BCP manager for the MGD database
+MGD_BCP_PATH=${OUTPUTDIR}
+MGD_BCP_PREVENT_EXECUTE=false
+MGD_BCP_TRUNCATE_LOG=true
+MGD_BCP_DROP_INDEXES=false
+MGD_BCP_RECORD_STAMPING=false
+MGD_BCP_AUTO_FLUSH=false
+MGD_BCP_OK_TO_OVERWRITE=false
+
+export MGD_BCP_PATH MGD_BCP_PREVENT_EXECUTE MGD_BCP_TRUNCATE_LOG
+export MGD_BCP_DROP_INDEXES MGD_BCP_RECORD_STAMPING MGD_BCP_AUTO_FLUSH
+export MGD_BCP_OK_TO_OVERWRITE
+
+#  Settings used to create a BCP manager for the RADAR database
+RADAR_BCP_PATH=${OUTPUTDIR}
+RADAR_BCP_PREVENT_EXECUTE=false
+RADAR_BCP_TRUNCATE_LOG=true
+RADAR_BCP_DROP_INDEXES=false
+RADAR_BCP_RECORD_STAMPING=false
+RADAR_BCP_AUTO_FLUSH=false
+RADAR_BCP_OK_TO_OVERWRITE=false
+
+export RADAR_BCP_PATH RADAR_BCP_PREVENT_EXECUTE RADAR_BCP_TRUNCATE_LOG
+export RADAR_BCP_DROP_INDEXES RADAR_BCP_RECORD_STAMPING RADAR_BCP_AUTO_FLUSH
+export RADAR_BCP_OK_TO_OVERWRITE
+
+###########################################################################
+#
+#  REPORT SETTINGS
+#
+###########################################################################
+
+FMT_WEB_SERVER_URL=www.informatics.jax.org
+
+NOTMAPPED_OUTFILE_NAME=${RPTDIR}/notMapped.txt
+NOTMAPPED_OUTFILE_SORT_DEF="-k1"
+NOTMAPPED_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_NotMapped
+
+DISCREPANCY_OUTFILE_NAME=${RPTDIR}/discrepancy.txt
+DISCREPANCY_OUTFILE_SORT_DEF="-k1"
+DISCREPANCY_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_Discrepancy
+
+DLA_FORMAT_REPORTS_ONLY=false
+
+
+
+###########################################################################
+#
+#  MISCELLANEOUS SETTINGS
+#
+###########################################################################
+#  The name of the load for the subject of an email notification
+MAIL_LOADNAME="PIRSF Load"
+
+#  Recipient list for mailing the log files (comma-separated)
+MAIL_LOG_PROC="mbw"
+MAIL_LOG_CUR="mbw"
+
+export MAIL_LOADNAME MAIL_LOG_PROC MAIL_LOG_CUR
+
