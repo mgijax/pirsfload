@@ -193,6 +193,26 @@ DISCREPANCY_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_Di
 
 DLA_FORMAT_REPORTS_ONLY=false
 
+###########################################################################
+#
+#  VOCLOAD AND ANNOTLOAD SETTINGS
+#
+###########################################################################
+
+# parameters for vocload
+
+VOCLOAD_COMMAND_PATH=${USRLOCALMGI}/dataload/vocload/simpleLoad.py
+VOCLOAD_RCD_FILENAME=${USRLOCALMGI}/dataload/vocload/simple.rcd
+VOCLOAD_NAME="PIR Superfamily"
+VOCLOAD_OUTPUTDIR=${OUTPUTDIR}
+
+# parameters for annotload
+
+CMD_ANNOTLOAD_PATH=${USRLOCALMGI}/dataload/annotload/annotload.py
+CMD_ANNOTLOAD_MODE=new
+CMD_ANNOTLOAD_TYPE=PIRSF/Marker
+CMD_ANNOTLOAD_JNUMBER="J:99750"
+
 
 
 ###########################################################################
