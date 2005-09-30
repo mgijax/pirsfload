@@ -75,8 +75,7 @@ public class PIRSFLoad extends DLALoader
     }
     protected void run() throws MGIException
     {
-        PIRSFInputFile infile =
-            new PIRSFInputFile("iproclass_mouse_07072005.xml");
+        PIRSFInputFile infile = new PIRSFInputFile();
             //new PIRSFInputFile("iproclassTest.xml");
         XMLDataIterator iterator = infile.getIterator();
         HashMap noMappings = new HashMap();
