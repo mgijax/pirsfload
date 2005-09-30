@@ -12,10 +12,9 @@ import org.jax.mgi.shr.dbutils.RowReference;
 import org.jax.mgi.shr.config.ConfigException;
 
 
+public class ProteinSeqLookup extends FullCachedLookup {
 
-public class EntrezGeneLookup extends FullCachedLookup {
-
-    public EntrezGeneLookup()
+    public ProteinSeqLookup()
     throws ConfigException, DBException, CacheException
     {
         super(SQLDataManagerFactory.getShared(SchemaConstants.MGD));
@@ -28,26 +27,20 @@ public class EntrezGeneLookup extends FullCachedLookup {
     public String getFullInitQuery()
     {
         return
-            "select a1.accID as 'entrezGene', a2.accID as 'marker', " +
+            "select a.accid as 'proteinAccid', a2.accid as 'markerAccid' ," +
             "       t.name as 'markerType', m._marker_key as 'markerKey' " +
-            "from ACC_AccessionReference r, " +
-            "         ACC_Accession a1, " +
-            "         ACC_Accession a2, " +
-            "         MRK_Marker m, " +
-            "         MRK_Types t " +
-            "where r._Refs_key = " + Constants.EGLOAD_REFSKEY + " " +
-            "and a1._Accession_key = r._Accession_key " +
-            "and a1._LogicalDB_key = " +
-                       Constants.ENTREZ_GENE_LOGICALDB + " " +
-            "and a1._MGIType_key = 2 " +
-            "and a1.preferred = 1 " +
-            "and a2._Object_key = a1._Object_key " +
-            "and a2._MGIType_key = 2 " +
-            "and a2._LogicalDB_key = 1 " +
-            "and a2.preferred = 1 " +
-            "and a2.prefixPart = 'MGI:' " +
-            "and m._marker_key = a1._object_key " +
+            "from mrk_marker m, acc_accession a, acc_accession a2, " +
+            "     mrk_types t " +
+            "where  a._logicaldb_key in (41, 13, 27) " +
+            "and a._mgitype_key = 2 " +
+            "and a._object_key = m._marker_key " +
+            "and m._organism_key = 1  " +
+            "and a2._object_key = m._marker_key " +
+            "and a2.private = 0  " +
+            "and a2._logicaldb_key = 1 " +
+            "and a2._mgitype_key = 2 " +
             "and t._marker_type_key = m._marker_type_key";
+
     }
     public RowDataInterpreter getRowDataInterpreter()
     {
@@ -60,10 +53,10 @@ public class EntrezGeneLookup extends FullCachedLookup {
         throws DBException
         {
             Marker marker =
-                new Marker(row.getString("marker"),
+                new Marker(row.getString("markerAccid"),
                            row.getString("markerType"),
                            row.getInt("markerKey").intValue());
-            return new KeyValue(row.getString("entrezGene"), marker);
+            return new KeyValue(row.getString("proteinAccid"), marker);
         }
     }
 
