@@ -15,7 +15,7 @@
 ###########################################################################
 
 #  Installation directory for the GenBank sequence load
-INSTALLDIR=/home/mbw/sandbox/pirsfload
+INSTALLDIR=/usr/local/mgi/live/dataload/pirsfload
 
 export INSTALLDIR
 
