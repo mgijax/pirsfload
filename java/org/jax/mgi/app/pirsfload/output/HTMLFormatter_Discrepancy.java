@@ -68,7 +68,8 @@ public class HTMLFormatter_Discrepancy extends HTMLFormatter
         String sflist = fields[1];
 
         String marker_html = super.formatAccidAnchorTag(marker);
-        String sflist_html = super.formatPIRSFList(sflist.substring(1, sflist.length() - 2));
+        String sflist_html =
+            super.formatPIRSFList(sflist.substring(1, sflist.length() - 2));
 
         String rowstart = "<TR>" + OutputDataFile.CRT;
         String rowend = "</TR>" + OutputDataFile.CRT;
