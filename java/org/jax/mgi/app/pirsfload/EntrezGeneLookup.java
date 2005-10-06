@@ -29,7 +29,7 @@ public class EntrezGeneLookup extends FullCachedLookup {
     {
         return
             "select a1.accID as 'entrezGene', a2.accID as 'marker', " +
-            "       t.name as 'markerType', m._marker_key as 'markerKey' " +
+            "       t.name as 'markerType', m._Marker_key as 'markerKey' " +
             "from ACC_AccessionReference r, " +
             "         ACC_Accession a1, " +
             "         ACC_Accession a2, " +
@@ -46,8 +46,8 @@ public class EntrezGeneLookup extends FullCachedLookup {
             "and a2._LogicalDB_key = 1 " +
             "and a2.preferred = 1 " +
             "and a2.prefixPart = 'MGI:' " +
-            "and m._marker_key = a1._object_key " +
-            "and t._marker_type_key = m._marker_type_key";
+            "and m._Marker_key = a1._Object_key " +
+            "and t._Marker_Type_key = m._Marker_Type_key";
     }
     public RowDataInterpreter getRowDataInterpreter()
     {

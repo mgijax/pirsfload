@@ -27,19 +27,20 @@ public class ProteinSeqLookup extends FullCachedLookup {
     public String getFullInitQuery()
     {
         return
-            "select a.accid as 'proteinAccid', a2.accid as 'markerAccid' ," +
-            "       t.name as 'markerType', m._marker_key as 'markerKey' " +
-            "from mrk_marker m, acc_accession a, acc_accession a2, " +
-            "     mrk_types t " +
-            "where  a._logicaldb_key in (41, 13, 27) " +
-            "and a._mgitype_key = 2 " +
-            "and a._object_key = m._marker_key " +
-            "and m._organism_key = 1  " +
-            "and a2._object_key = m._marker_key " +
+            "select a.accID as 'proteinAccid', a2.accID as 'markerAccid' ," +
+            "       t.name as 'markerType', m._Marker_key as 'markerKey' " +
+            "from MRK_Marker m, ACC_Accession a, ACC_Accession a2, " +
+            "     MRK_Types t " +
+            "where  a._LogicalDB_key in (41, 13, 27) " +
+            "and a._MGIType_key = 2 " +
+            "and a._Object_key = m._Marker_key " +
+            "and m._Organism_key = 1  " +
+            "and a2._Object_key = m._Marker_key " +
             "and a2.private = 0  " +
-            "and a2._logicaldb_key = 1 " +
-            "and a2._mgitype_key = 2 " +
-            "and t._marker_type_key = m._marker_type_key";
+            "and a2._LogicalDB_key = 1 " +
+            "and a2._MGIType_key = 2 " +
+            "and a2.preferred = 1 " +
+            "and t._Marker_Type_key = m._Marker_Type_key";
 
     }
     public RowDataInterpreter getRowDataInterpreter()
