@@ -103,14 +103,13 @@ OUTPUTDIR=${FILEDIR}/output
 
 export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
 
-# full path to input file directory when APP_RADAR_INPUT=false
-# currently not used by mouse which instead uses DP tables in RADAR
-INPUTDIR=${FILEDIR}/input
+INPUTDIR=/data/downloads/ftp.pir.georgetown.edu/iproclass
 
-INFILE_NAME=${INPUTDIR}/iproclass_mouse_07072005.xml
+INFILE_NAME=STDIN
 
-export INPUTDIR INFILE_NAME
+INPUT_FILENAME=${INPUTDIR}/iproclass.xml.gz
 
+export INPUTDIR INFILE_NAME INPUT_FILENAME
 
 #  Complete path name of the log files
 LOG_PROC=${LOGDIR}/pirsfload.proc.log
@@ -171,11 +170,11 @@ FMT_WEB_SERVER_URL=www.informatics.jax.org
 
 NOTMAPPED_OUTFILE_NAME=${RPTDIR}/notMapped.txt
 NOTMAPPED_OUTFILE_SORT_DEF="-k1"
-NOTMAPPED_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_NotMapped
+NOTMAPPED_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_NotMapped,org.jax.mgi.app.pirsfload.output.ReportFormatter_NotMapped
 
 DISCREPANCY_OUTFILE_NAME=${RPTDIR}/oneToMany.txt
 DISCREPANCY_OUTFILE_SORT_DEF="-k1"
-DISCREPANCY_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_Discrepancy
+DISCREPANCY_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_Discrepancy,org.jax.mgi.app.pirsfload.output.ReportFormatter_Discrepancy
 
 DLA_FORMAT_REPORTS_ONLY=false
 
