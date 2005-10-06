@@ -115,7 +115,7 @@ preload
 #
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the PIRSFLoad application" >> ${LOG_PROC}
-${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
+/usr/local/bin/gunzip -c ${INPUT_FILENAME}|${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${COMMON_CONFIG},${CONFIG} \
         -DJOBKEY=${JOBKEY} ${DLA_START}
 STAT=$?
@@ -129,12 +129,12 @@ fi
 #
 # run qc reports
 #
-${APP_QCRPT} ${RPTDIR} ${RADAR_DBSERVER} ${RADAR_DBNAME} ${JOBKEY}
+${APP_QCRPT} ${RPTDIR} ${MGD_DBSERVER} ${MGD_DBNAME} ${RADAR_DBNAME} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
     echo "Running seqloader QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
-    shutDown
+    postload
     exit 1
 fi
 
