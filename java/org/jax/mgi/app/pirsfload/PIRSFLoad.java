@@ -17,6 +17,18 @@ import org.jax.mgi.shr.dla.input.pir.PIRSFInputFile;
 import org.jax.mgi.shr.dla.input.pir.PIRSFInputFile.PIRSFSuperFamily;
 import org.jax.mgi.shr.ioutils.OutputManager;
 
+/**
+ * is a DLALoader for loading PIRSF superfamilies into the database
+ * as vocabulary terms and loading marker annotations to these terms
+ * based on the results of a mapping algorithm using associated sequences
+ * @has nothing
+ * @does reads the PIRSF iproclass file, maps the PIRSF superfamily data to
+ * MGI mouse markers using an algorithm based on sequence associations and
+ * writes the results to MGI as vocabulary and annotation records
+ * @company Jackson Laboratory
+ * @author M Walker
+ *
+ */
 
 public class PIRSFLoad extends DLALoader
 {
@@ -30,9 +42,20 @@ public class PIRSFLoad extends DLALoader
     private HashMap superfamilyToMarkerMap = new HashMap();
     private HashMap markerToSuperfamilyMap = new HashMap();
 
+    /**
+     * constructor
+     * @throws DLALoaderException thrown if the super class cannot be
+     * instantiated
+     */
     public PIRSFLoad() throws DLALoaderException
     {
     }
+    /**
+     * initialize the internal structures used by this class
+     * @assumes nothing
+     * @effects internal structures including database caching is initialized
+     * @throws MGIException thrown if there is an error during initialization
+     */
     protected void initialize() throws MGIException
     {
         super.logger.logInfo("Opening report files");
@@ -50,6 +73,14 @@ public class PIRSFLoad extends DLALoader
             basedir + "cache_entrezGeneAssoc.txt"));
 
     }
+    /**
+     * runs the vocload and annotload
+     * @assumes nothing
+     * @effects new vocabulary terms and annotations will be loaded into the
+     * database
+     * @throws MGIException thrown if there is an error running the
+     * vocload and annotload
+     */
     protected void postprocess() throws MGIException
     {
         super.logger.logInfo("Closing report files");
@@ -66,6 +97,13 @@ public class PIRSFLoad extends DLALoader
         annotLoad.setLogger(super.logger);
         annotLoad.run();
     }
+
+    /**
+     * runs the delete script to remove existing PIRSF vocabulary terms and
+     * annotations from the database
+     * @throws MGIException thrown if there is an error running the
+     * delete script
+     */
     protected void preprocess() throws MGIException
     {
         super.logger.logInfo("Deleting existing data from MGI");
@@ -73,6 +111,15 @@ public class PIRSFLoad extends DLALoader
         batch.addScriptBatch(Constants.DELETE_SCRIPT);
         batch.executeBatch();
     }
+    /**
+     * read the iproclass input file and run the mapping algorithm and creates
+     * output data files
+     * @assumes nothing
+     * @effects the data will be created for loading vocabulary and annotations
+     * into the database and output data files are created
+     * @throws MGIException thrown if there is an error accessing the input
+     * file or writing output data
+     */
     protected void run() throws MGIException
     {
         PIRSFInputFile infile = new PIRSFInputFile();
@@ -275,7 +322,7 @@ public class PIRSFLoad extends DLALoader
         }
     }
 
-    public class NotMapped
+    private class NotMapped
     {
         private String id = null;
         private String name = null;
