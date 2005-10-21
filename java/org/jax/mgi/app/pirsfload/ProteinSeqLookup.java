@@ -11,19 +11,49 @@ import org.jax.mgi.shr.dbutils.DBException;
 import org.jax.mgi.shr.dbutils.RowReference;
 import org.jax.mgi.shr.config.ConfigException;
 
+/**
+ * is full cached lookup for marker associations to protein sequences
+ * @has internal cache
+ * @does provides a lookup to the cache
+ * @company Jackson Laboratory
+ * @author M Walker
+ *
+ */
 
 public class ProteinSeqLookup extends FullCachedLookup {
 
+    /**
+     * constructor
+     * @throws ConfigException thrown if there is an error accessing the
+     * configuration
+     * @throws DBException thrown if there is an error accessing the
+     * database
+     * @throws CacheException thrown if there is an error accessing the
+     * cache
+     */
     public ProteinSeqLookup()
     throws ConfigException, DBException, CacheException
     {
         super(SQLDataManagerFactory.getShared(SchemaConstants.MGD));
     }
+    /**
+     * lookup a marker associated to a given swissprot, trembl or
+     * refseq sequence
+     * @param seq the protein sequence
+     * @return the associated marker
+     * @throws DBException thrown if there is an error accessing the database
+     * @throws CacheException thrown if there is an exception accessing the
+     * cache
+     */
     public Marker lookup(String seq)
     throws DBException, CacheException
     {
         return (Marker)super.lookupNullsOk(seq);
     }
+    /**
+     * get the query for fully initializing the cache
+     * @return the query for fully initializing the cache
+     */
     public String getFullInitQuery()
     {
         return
@@ -43,12 +73,16 @@ public class ProteinSeqLookup extends FullCachedLookup {
             "and t._Marker_Type_key = m._Marker_Type_key";
 
     }
+    /**
+     * get the RowDataInterpreter object for interpreting the query results
+     * @return the RowDataInterpreter
+     */
     public RowDataInterpreter getRowDataInterpreter()
     {
         return new Interpreter();
     }
 
-    public class Interpreter implements RowDataInterpreter
+    private class Interpreter implements RowDataInterpreter
     {
         public Object interpret(RowReference row)
         throws DBException

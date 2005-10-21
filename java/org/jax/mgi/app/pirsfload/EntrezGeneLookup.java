@@ -11,20 +11,50 @@ import org.jax.mgi.shr.dbutils.DBException;
 import org.jax.mgi.shr.dbutils.RowReference;
 import org.jax.mgi.shr.config.ConfigException;
 
-
+/**
+ *
+ * is a FullCachedLookup storing EntrezGene associations to markers
+ * @has internal cache of Entrez Gene to marker associations
+ * @does provides a lookup for accessing the cache
+ * @company Jackson Laboratory
+ * @author M Walker
+ *
+ */
 
 public class EntrezGeneLookup extends FullCachedLookup {
 
+    /**
+     * constructor
+     * @throws ConfigException thrown if there is an error accessing the
+     * configuration
+     * @throws DBException thrown if there is an error accessing the database
+     * @throws CacheException thrown if there is an error accessing the
+     * cache
+     */
     public EntrezGeneLookup()
     throws ConfigException, DBException, CacheException
     {
         super(SQLDataManagerFactory.getShared(SchemaConstants.MGD));
     }
-    public Marker lookup(String seq)
+
+    /**
+     * look up an associated marker to a given Entrez Gene id
+     * @param egid the Entrez Gene id
+     * @return the associated marker
+     * @throws DBException thrown if there is an error accessing the database
+     * @throws CacheException thrown if there is an error accessing the
+     * configuration
+     */
+    public Marker lookup(String egid)
     throws DBException, CacheException
     {
-        return (Marker)super.lookupNullsOk(seq);
+        return (Marker)super.lookupNullsOk(egid);
     }
+
+    /**
+     * get the query for fully initializing the cache
+     * @return the initialization query
+     */
     public String getFullInitQuery()
     {
         return
@@ -49,12 +79,17 @@ public class EntrezGeneLookup extends FullCachedLookup {
             "and m._Marker_key = a1._Object_key " +
             "and t._Marker_Type_key = m._Marker_Type_key";
     }
+
+    /**
+     * get the RowDataInterpreter for interpreting initialization query
+     * @return the RowDataInterpreter
+     */
     public RowDataInterpreter getRowDataInterpreter()
     {
         return new Interpreter();
     }
 
-    public class Interpreter implements RowDataInterpreter
+    private class Interpreter implements RowDataInterpreter
     {
         public Object interpret(RowReference row)
         throws DBException
