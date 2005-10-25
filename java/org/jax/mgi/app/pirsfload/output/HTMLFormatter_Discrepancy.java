@@ -6,7 +6,7 @@ import org.jax.mgi.shr.dla.output.HTMLFormatter;
 
 /**
  * is a class which extends HTMLFormatter from the lib_java_dla product and
- * provides functionality for rendering zero to one buckets
+ * provides functionality for rendering a discrepancy report in HTML
  * @has nothing
  * @does formats output in HTML
  * @company The Jackson Laboratory

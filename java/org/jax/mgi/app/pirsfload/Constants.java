@@ -1,6 +1,13 @@
 package org.jax.mgi.app.pirsfload;
 
-
+/**
+ * Constants defined for the PIRSFLoad
+ * @has constant definitions
+ * @does nothing
+ * @company Jackson Laboratory
+ * @author M Walker
+ *
+ */
 
 public class Constants {
 

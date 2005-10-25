@@ -1,7 +1,7 @@
 package org.jax.mgi.app.pirsfload;
 
 /**
- * a plain old java object for storing vocabular term information
+ * a plain old java object for storing vocabulary term information
  * @has a vocabulary term and an accession id for the term
  * @does nothing
  * @company Jackson Laboratory

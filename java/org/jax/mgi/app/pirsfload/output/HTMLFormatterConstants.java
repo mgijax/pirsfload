@@ -1,7 +1,7 @@
 package org.jax.mgi.app.pirsfload.output;
 
 /**
- * is a class for static constants data
+ * is a class with constant definitions for HTML formatting
  * @has constants definitions
  * @does nothing
  * @company The Jackson Laboratory

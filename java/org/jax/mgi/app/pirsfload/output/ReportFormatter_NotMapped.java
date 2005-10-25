@@ -5,10 +5,25 @@ import org.jax.mgi.shr.dla.output.MGIReportFormatter.ColumnHeader;
 import org.jax.mgi.shr.dbutils.SQLDataManager;
 import org.jax.mgi.shr.ioutils.IOUException;
 
+/**
+ * is a class which extends MGIFormatter from the lib_java_dla product and
+ * provides functionality for rendering a report in MGI report format of
+ * superfamilies not mapped to MGI
+ * @has nothing
+ * @does formats output in MGI report format
+ * @company The Jackson Laboratory
+ * @author M Walker
+ *
+ */
+
 
 public class ReportFormatter_NotMapped extends MGIReportFormatter
 {
 
+    /**
+     * get the names of the columns
+     * @return the names of the columns
+     */
     public ColumnHeader[] getColumnHeaders()
     {
         return new ColumnHeader[] {
@@ -19,6 +34,10 @@ public class ReportFormatter_NotMapped extends MGIReportFormatter
             new ColumnHeader("Entrez Gene", 11),};
     }
 
+    /**
+     * get the description of the report
+     * @return the description of the report
+     */
     public String getReportDescription()
     {
         return
