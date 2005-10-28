@@ -1,0 +1,52 @@
+package id4kjnwef9vcvbref9vi0u8;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.jax.mgi.app.pirsfload.EntrezGeneLookup:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.app.pirsfload.PIRSFLoad:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference18 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.app.pirsfload.ProteinSeqLookup:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference19 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.shr.dla.input.pir.PIRSFInputFile:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference25 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options option.detail = Implementation 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.pirsfload.PIRSFLoad#entrezGeneLookup:oiref>=495,220,495,182:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.pirsfload.EntrezGeneLookup:oiref>=320,10,290,172,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.pirsfload.ProteinSeqLookup:oiref>=10,90,270,172,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.shr.dla.input.pir.PIRSFInputFile:oiref>=90,280,304,185,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.pirsfload.PIRSFLoad:oiref>=440,220,110,124,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.pirsfload.PIRSFLoad#proteinLookup:oiref>=440,241,280,241:oigroup>
+<oigroup:<oiref:java#Member#org.jax.mgi.app.pirsfload.EntrezGeneLookup#lookup#(#java.lang.String#)#:oiref>=340,270,284,16,1:oigroup>
+*/
+class __positions {
+}

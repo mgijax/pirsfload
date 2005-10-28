@@ -1,0 +1,42 @@
+package id20vthef9vcvbref9vvscy;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.jax.mgi.app.pirsfload.Marker:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.app.pirsfload.Annotation:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference23 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.app.pirsfload.VocabularyTerm:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference24 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options option.detail = Implementation 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.jax.mgi.app.pirsfload.Annotation:oiref>=20,10,490,190,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.pirsfload.Marker:oiref>=10,230,230,181,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.pirsfload.VocabularyTerm:oiref>=260,230,260,101,0:oigroup> 
+*/
+class __positions {
+}
