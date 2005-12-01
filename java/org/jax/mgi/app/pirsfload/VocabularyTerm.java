@@ -30,7 +30,7 @@ public class VocabularyTerm {
      */
     public String toString()
     {
-        return this.term + "\t" + this.accid + "\tnon-obsolete\t\t\t\t\t";
+        return this.term + "\t" + this.accid + "\tcurrent\t\t\t\t\t";
     }
 
 }
