@@ -210,7 +210,7 @@ ANNOTLOAD_OUTPUTDIR=${OUTPUTDIR}
 MAIL_LOADNAME="PIRSF Load"
 
 #  Recipient list for mailing the log files (comma-separated)
-MAIL_LOG_PROC="mbw,lec"
+MAIL_LOG_PROC="mgiadmin"
 
 export MAIL_LOADNAME MAIL_LOG_PROC MAIL_LOG_CUR
 

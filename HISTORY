@@ -1,9 +1,11 @@
+TAG: pirsfload-3-5-0-2
 TAG: pirsfload-3-5-0-1
 DATE: 09/21/2006
 STAFF: lec
 CHANGES: TR 7335; added PIRSF_Stats.sql.rpt to index.html
 Report is generated from QC reports product.
 Ignore tr7335 branch; it will not be merged to the trunk
+update config with "mgiadmin"
 
 TAG: pirsfload-tr7335-BP
 DATE: 12/27/2005
