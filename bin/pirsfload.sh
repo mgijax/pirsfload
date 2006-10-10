@@ -122,7 +122,7 @@ fi
 
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the Vocabulary load" >> ${LOG_PROC}
-${VOCLOAD}/runSimpleFullLoadNoArchive.sh ${VOCLOAD_CONFIG}
+${VOCLOAD}/runSimpleFullLoadNoArchive.sh ${VOCLOAD_CONFIG} >> ${LOG_PROC}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
@@ -133,7 +133,7 @@ fi
 
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the Annotation load" >> ${LOG_PROC}
-cd ${OUTPUTDIR} && ${ANNOTLOAD}/annotload.csh ${ANNOTLOAD_CONFIG}
+cd ${OUTPUTDIR} && ${ANNOTLOAD}/annotload.csh ${ANNOTLOAD_CONFIG} >> ${LOG_PROC}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
