@@ -130,11 +130,10 @@ then
     postload
     exit 1
 fi
-cd ${PIRSFLOAD}
 
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the Annotation load" >> ${LOG_PROC}
-${ANNOTLOAD}/annotload.csh ${ANNOTLOAD_CONFIG}
+cd ${OUTPUTDIR} && ${ANNOTLOAD}/annotload.csh ${ANNOTLOAD_CONFIG}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
@@ -150,7 +149,7 @@ ${APP_QCRPT} ${RPTDIR} ${MGD_DBSERVER} ${MGD_DBNAME} ${RADAR_DBNAME} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
-    echo "Running seqloader QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
+    echo "Running QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
     postload
     exit 1
 fi
