@@ -74,18 +74,26 @@ public class PIRSFLoad extends DLALoader
 
     }
     /**
-     * runs the vocload and annotload
+     * used to run vocabulary load and annotation load
      * @assumes nothing
-     * @effects new vocabulary terms and annotations will be loaded into the
-     * database
-     * @throws MGIException thrown if there is an error running the
-     * vocload and annotload
+     * @effects nothing
+     * @throws nothing
      */
     protected void postprocess() throws MGIException
     {
         super.logger.logInfo("Closing report files");
         termfile.close();
         annotfile.close();
+	return;
+
+	/* 10/10/2006 lec:
+	   This method used to call the vocabulary load and annotation load
+	   but these are now called directly from the job stream.
+	   The only thing the post processing has to do now is to
+	   close the files.
+        */
+
+	/*
         super.logger.logInfo("Running vocload");
         VocLoad vocLoad =
             new VocLoad(termfile.getFilename(), super.loadDBMgr);
@@ -96,6 +104,7 @@ public class PIRSFLoad extends DLALoader
             new AnnotationLoad(annotfile.getFilename(), super.loadDBMgr);
         annotLoad.setLogger(super.logger);
         annotLoad.run();
+	*/
     }
 
     /**

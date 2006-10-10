@@ -14,46 +14,17 @@
 #
 ###########################################################################
 
-#  Installation directory for the GenBank sequence load
-INSTALLDIR=${USRLOCALMGI}/dataload/pirsfload
-
-export INSTALLDIR
-
-###########################################################################
 #
-#  DATABASE SETTINGS BY DATABASE
+#  If the MGICONFIG environment variable does not have a local override,
+#  use the default "live" settings.
 #
-###########################################################################
+if [ "${MGICONFIG}" = "" ]
+then
+    MGICONFIG=/usr/local/mgi/live/mgiconfig
+    export MGICONFIG
+fi
 
-# MGD Connection parameters 
-MGD_DBSERVER=PROD_MGI
-
-MGD_DBURL=shire.informatics.jax.org:4100
-
-MGD_DBNAME=mgd
-
-MGD_DBUSER=mgd_dbo
-MGD_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
-
-MGD_DBSCHEMADIR=${MGDDBSCHEMADIR}
-
-export MGD_DBSERVER MGD_DBURL MGD_DBNAME
-export MGD_DBUSER MGD_DBPASSWORDFILE MGD_DBSCHEMADIR
-
-# RADAR Connection parameters 
-RADAR_DBSERVER=PROD_MGI
-
-RADAR_DBURL=shire.informatics.jax.org:4100
-
-RADAR_DBNAME=radar
-
-RADAR_DBUSER=mgd_dbo
-RADAR_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
-
-RADAR_DBSCHEMADIR=${RADARDBSCHEMADIR}
-
-export RADAR_DBSERVER RADAR_DBURL RADAR_DBNAME RADAR_DBUSER 
-export RADAR_DBPASSWORDFILE RADAR_DBSCHEMADIR 
+. ${MGICONFIG}/master.config.sh
 
 ###########################################################################
 #
@@ -63,9 +34,9 @@ export RADAR_DBPASSWORDFILE RADAR_DBSCHEMADIR
 
 JAVARUNTIMEOPTS="-Xms1000m -Xmx1000m"
 
-JAVA_LIB=${JAVAPATH}/dla.jar:${JAVAPATH}/core.jar:${JAVAPATH}/dbsmgd.jar:${JAVAPATH}/dbsrdr.jar:/usr/local/java/lib/jsr173_1.0_api.jar:/usr/local/java/lib/jsr173_1.0_ri.jar
+JAVA_LIB=${MGI_JAVALIB}/dla.jar:${MGI_JAVALIB}/core.jar:${MGI_JAVALIB}/dbsmgd.jar:${MGI_JAVALIB}/dbsrdr.jar:/usr/local/java/lib/jsr173_1.0_api.jar:/usr/local/java/lib/jsr173_1.0_ri.jar
 
-CLASSPATH=.:${INSTALLDIR}/classes:${JAVA_LIB}:${COMMON_CLASSPATH}
+CLASSPATH=.:${PIRSFLOAD}/classes:${JAVA_LIB}:${COMMON_CLASSPATH}
 
 export JAVARUNTIMEOPTS JAVA_LIB CLASSPATH
 
@@ -184,22 +155,10 @@ DLA_FORMAT_REPORTS_ONLY=false
 #
 ###########################################################################
 
-# parameters for vocload
+VOCLOAD_CONFIG=${PIRSFLOAD}/vocload.config
+ANNOTLOAD_CONFIG=${PIRSFLOAD}/annotload.config
 
-VOCLOAD_COMMAND_PATH=${USRLOCALMGI}/dataload/vocload/simpleLoad.py
-VOCLOAD_RCD_FILENAME=${USRLOCALMGI}/dataload/vocload/simple.rcd
-VOCLOAD_NAME="PIR Superfamily"
-VOCLOAD_OUTPUTDIR=${OUTPUTDIR}
-
-# parameters for annotload
-
-ANNOTLOAD_PATH=${USRLOCALMGI}/dataload/annotload/annotload.py
-ANNOTLOAD_MODE=new
-ANNOTLOAD_TYPE=PIRSF/Marker
-ANNOTLOAD_JNUMBER="J:99750"
-ANNOTLOAD_OUTPUTDIR=${OUTPUTDIR}
-
-
+export VOCLOAD_CONFIG ANNOTLOAD_CONFIG
 
 ###########################################################################
 #
@@ -210,7 +169,12 @@ ANNOTLOAD_OUTPUTDIR=${OUTPUTDIR}
 MAIL_LOADNAME="PIRSF Load"
 
 #  Recipient list for mailing the log files (comma-separated)
-MAIL_LOG_PROC="mgiadmin"
+MAIL_LOG_PROC="mgiadmin@informatics.jax.org"
 
 export MAIL_LOADNAME MAIL_LOG_PROC MAIL_LOG_CUR
+
+#  Installation directory
+INSTALLDIR=${PIRSFLOAD}
+export INSTALLDIR
+
 
