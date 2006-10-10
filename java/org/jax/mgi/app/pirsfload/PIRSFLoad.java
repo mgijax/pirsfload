@@ -10,8 +10,6 @@ import org.jax.mgi.shr.ioutils.OutputDataFile;
 import org.jax.mgi.shr.dbutils.BatchProcessor;
 import org.jax.mgi.shr.dla.loader.DLALoader;
 import org.jax.mgi.shr.dla.loader.DLALoaderException;
-import org.jax.mgi.shr.dla.ext.AnnotationLoad;
-import org.jax.mgi.shr.dla.ext.VocLoad;
 import org.jax.mgi.shr.exception.MGIException;
 import org.jax.mgi.shr.dla.input.pir.PIRSFInputFile;
 import org.jax.mgi.shr.dla.input.pir.PIRSFInputFile.PIRSFSuperFamily;
