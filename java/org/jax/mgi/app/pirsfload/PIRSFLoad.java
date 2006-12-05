@@ -58,21 +58,27 @@ public class PIRSFLoad extends DLALoader
     {
         super.logger.logInfo("Opening report files");
         String basedir = super.dlaConfig.getReportsDir() + File.separator;
+
         termfile = new OutputDataFile(basedir + "termfile");
         annotfile = new OutputDataFile(basedir + "annotfile");
+
         super.logger.logInfo("Initializing cache");
+
         proteinLookup = new ProteinSeqLookup();
         proteinLookup.initCache();
-        proteinLookup.printCache(new OutputDataFile(
-            basedir + "cache_proteinAssoc.txt"));
+	OutputDataFile proteinAssocFile = new OutputDataFile (basedir + "cache_proteinGeneAssoc.txt");
+	proteinLookup.printCache(proteinAssocFile);
+	proteinAssocFile.close();
+
         entrezGeneLookup = new EntrezGeneLookup();
         entrezGeneLookup.initCache();
-        entrezGeneLookup.printCache(new OutputDataFile(
-            basedir + "cache_entrezGeneAssoc.txt"));
+	OutputDataFile egAssocFile = new OutputDataFile (basedir + "cache_entrezGeneAssoc.txt");
+	entrezGeneLookup.printCache(egAssocFile);
+	egAssocFile.close();
 
     }
     /**
-     * used to run vocabulary load and annotation load
+     * closes files
      * @assumes nothing
      * @effects nothing
      * @throws nothing
@@ -83,26 +89,6 @@ public class PIRSFLoad extends DLALoader
         termfile.close();
         annotfile.close();
 	return;
-
-	/* 10/10/2006 lec:
-	   This method used to call the vocabulary load and annotation load
-	   but these are now called directly from the job stream.
-	   The only thing the post processing has to do now is to
-	   close the files.
-        */
-
-	/*
-        super.logger.logInfo("Running vocload");
-        VocLoad vocLoad =
-            new VocLoad(termfile.getFilename(), super.loadDBMgr);
-        vocLoad.setLogger(super.logger);
-        vocLoad.run();
-        super.logger.logInfo("Running annotload");
-        AnnotationLoad annotLoad =
-            new AnnotationLoad(annotfile.getFilename(), super.loadDBMgr);
-        annotLoad.setLogger(super.logger);
-        annotLoad.run();
-	*/
     }
 
     /**
@@ -130,22 +116,28 @@ public class PIRSFLoad extends DLALoader
     protected void run() throws MGIException
     {
         PIRSFInputFile infile = new PIRSFInputFile();
-            //new PIRSFInputFile("iproclassTest.xml");
         XMLDataIterator iterator = infile.getIterator();
         HashMap noMappings = new HashMap();
         HashSet noMappingsRevised = new HashSet();
+
+	// for each PIRSF record...
+
+	super.logger.logInfo("Iterating through PIRSF records");
+
         while (iterator.hasNext())
         {
             PIRSFSuperFamily sf = (PIRSFSuperFamily)iterator.next();
-            //if (!sf.pirsfID.equals("SF003832") &&
-                //!sf.pirsfID.equals("SF002443"))
-                //continue;
+
+	    // skip this record
+
             if (sf.pirsfID.equals("unset") ||
                 sf.pirsfName.equals(Constants.NOT_ASSIGNED))
                 continue;
 
+	    // lookup uniprot id in MGI
+
             HashSet markers = new HashSet();
-            for (Iterator i = sf.sprot.iterator(); i.hasNext();)
+            for (Iterator i = sf.uniprot.iterator(); i.hasNext();)
             {
                 String protein = (String)i.next();
                 Marker marker = proteinLookup.lookup(protein);
@@ -153,32 +145,27 @@ public class PIRSFLoad extends DLALoader
                     markers.add(marker);
             }
 
-            for (Iterator i = sf.trembl.iterator(); i.hasNext();)
-            {
-                String protein = (String)i.next();
-                Marker marker = proteinLookup.lookup(protein);
-                if (marker != null)
-                    markers.add(marker);
-            }
+	    // if uniprot id cannot be found in MGI, use alternative method
 
             if (markers.size() == 0)
-                markers =
-                    alternativeMap(sf, proteinLookup, entrezGeneLookup);
+                markers = alternativeMap(sf, proteinLookup, entrezGeneLookup);
+
+	    // if this PIRSF family does not map to any MGI markers....
 
             if (markers.size() == 0)
             {
+		// store non-mapping information
+
                 if (!noMappingsRevised.contains(sf.pirsfID))
                 {
                     if (!noMappings.containsKey(sf.pirsfID))
                     {
-                        NotMapped notMapped =
-                            new NotMapped(sf);
+                        NotMapped notMapped = new NotMapped(sf);
                         noMappings.put(sf.pirsfID, notMapped);
                     }
                     else
                     {
-                        NotMapped notMapped =
-                            (NotMapped) noMappings.get(sf.pirsfID);
+                        NotMapped notMapped = (NotMapped) noMappings.get(sf.pirsfID);
                         notMapped.addSequences(sf);
                     }
                 }
@@ -188,7 +175,6 @@ public class PIRSFLoad extends DLALoader
                 }
                 continue;
             }
-
 
             if (noMappings.containsKey(sf.pirsfID))
             {
@@ -225,14 +211,19 @@ public class PIRSFLoad extends DLALoader
                     assocSuperFamilies.add(sf.pirsfID);
                 }
             }
-        }
+        } // end of PIRSF records
+
+	super.logger.logInfo("Writing data to Term and Annotation files");
+
         HashSet knownDiscrepancies = new HashSet();
         for (Iterator i = noMappings.values().iterator(); i.hasNext();)
         {
             NotMapped notMapped = (NotMapped)i.next();
             OutputManager.writeln(NOTMAPPED, notMapped.toString());
-            //nomapping.writeln(notMapped.toString());
         }
+
+	// for each superfamily we want to load into MGI...
+
         for (Iterator i = superfamilyToMarkerMap.values().iterator();
              i.hasNext();)
         {
@@ -246,6 +237,9 @@ public class PIRSFLoad extends DLALoader
                 Marker m = (Marker)j.next();
                 HashSet associatedSFs =
                     (HashSet)this.markerToSuperfamilyMap.get(m.getAccid());
+
+		// if a marker maps to more than one superfamily, flag it
+
                 if (associatedSFs.size() > 1)
                 {
                     oneToMany = true;
@@ -260,11 +254,21 @@ public class PIRSFLoad extends DLALoader
                     break;
                 }
             }
+
+	    // skip 1-to-N
+
             if (oneToMany)
                 continue;
+
+	    // write PIRSF term to term file
+
             VocabularyTerm term =
                 new VocabularyTerm(sf2.pirsfName, sf2.pirsfID);
+
             termfile.writeln(term.toString());
+
+	    // write PIRSF/Marker association to annotation file
+
             for (Iterator j = markers.iterator(); j.hasNext();)
             {
                 Marker marker = (Marker)j.next();
@@ -276,6 +280,11 @@ public class PIRSFLoad extends DLALoader
         }
     }
 
+    /**
+    *
+    * looks up Marker in MGI by refseq ID or entrezgene ID
+    *
+    */
     private HashSet alternativeMap(PIRSFSuperFamily sf,
                                    ProteinSeqLookup proteinLookup,
                                    EntrezGeneLookup entrezGeneLookup)
@@ -290,9 +299,9 @@ public class PIRSFLoad extends DLALoader
             if (marker != null)
                 markers.add(marker);
         }
-        if (markers.size() == 0 && !sf.locusID.equals("unset"))
+        if (markers.size() == 0 && !sf.entrezID.equals("unset"))
         {
-            Marker marker = entrezGeneLookup.lookup(sf.locusID);
+            Marker marker = entrezGeneLookup.lookup(sf.entrezID);
             if (marker != null)
                 markers.add(marker);
         }
@@ -341,20 +350,18 @@ public class PIRSFLoad extends DLALoader
         {
             this.id = sf.pirsfID;
             this.name = sf.pirsfName;
-            this.uniprot.addAll(sf.sprot);
-            this.uniprot.addAll(sf.trembl);
+            this.uniprot.addAll(sf.uniprot);
             this.refseq.addAll(sf.refseqID);
-            if (!sf.locusID.equals("unset"))
-                this.entrezGene.add(sf.locusID);
+            if (!sf.entrezID.equals("unset"))
+                this.entrezGene.add(sf.entrezID);
         }
 
         public void addSequences(PIRSFSuperFamily sf)
         {
-            this.uniprot.addAll(sf.sprot);
-            this.uniprot.addAll(sf.trembl);
+            this.uniprot.addAll(sf.uniprot);
             this.refseq.addAll(sf.refseqID);
-            if (!sf.locusID.equals("unset"))
-                this.entrezGene.add(sf.locusID);
+            if (!sf.entrezID.equals("unset"))
+                this.entrezGene.add(sf.entrezID);
         }
 
         public int hashCode()

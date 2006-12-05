@@ -154,7 +154,6 @@ then
     exit 1
 fi
 
-
 echo "PIRSFLoad application completed successfully" >> ${LOG_PROC}
 
 postload
