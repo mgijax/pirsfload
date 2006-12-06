@@ -24,10 +24,6 @@ public class Constants {
      */
     public static final String LOADNAME = "PIRSF_Load";
     /**
-     * the name of the delete script to implement delete-reload strategy
-     */
-    public static final String DELETE_SCRIPT = "sql/MGDdelete.sql";
-    /**
      * the reference key for this load
      */
     public static final String EGLOAD_REFSKEY = "64047";

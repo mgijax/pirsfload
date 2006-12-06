@@ -88,22 +88,19 @@ public class PIRSFLoad extends DLALoader
         super.logger.logInfo("Closing report files");
         termfile.close();
         annotfile.close();
-	return;
     }
 
     /**
-     * runs the delete script to remove existing PIRSF vocabulary terms and
-     * annotations from the database
-     * @throws MGIException thrown if there is an error running the
-     * delete script
+     * @does nothing
+     * @assumes nothing
+     * @effects nothing
+     * @throws nothing
      */
     protected void preprocess() throws MGIException
     {
-        super.logger.logInfo("Deleting existing data from MGI");
-        BatchProcessor batch = super.loadDBMgr.getBatchProcessor();
-        batch.addScriptBatch(Constants.DELETE_SCRIPT);
-        batch.executeBatch();
+	return;
     }
+
     /**
      * read the iproclass input file and run the mapping algorithm and creates
      * output data files
