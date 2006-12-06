@@ -126,7 +126,7 @@ fi
 # it's ugly...but it's very, very temporary...:)
 #
 cd ${RPTDIR}
-sed "s/PIRSF/SF/" termfile > termfile.new
+sed "s/PIRSF/SF/g" termfile > termfile.new
 mv termfile termfile.old
 mv termfile.new termfile
 sed "s/PIRSF/SF/" annotfile > annotfile.new
