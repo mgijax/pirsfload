@@ -120,6 +120,19 @@ then
     exit 1
 fi
 
+#
+# temporary fix...replace "PIRSFxxxx" with "SFxxxxx"
+# remove this once the wi can handle PIRSF
+# it's ugly...but it's very, very temporary...:)
+#
+cd ${RPTDIR}
+sed "s/PIRSF/SF/" termfile > termfile.new
+mv termfile termfile.old
+mv termfile.new termfile
+sed "s/PIRSF/SF/" annotfile > annotfile.new
+mv annotfile annotfile.old
+mv annotfile.new annotfile
+
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the Vocabulary load" >> ${LOG_PROC}
 ${VOCLOAD}/runSimpleFullLoadNoArchive.sh ${VOCLOAD_CONFIG} >> ${LOG_PROC}
