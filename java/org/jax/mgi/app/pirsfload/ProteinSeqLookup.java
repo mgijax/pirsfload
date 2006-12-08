@@ -52,25 +52,23 @@ public class ProteinSeqLookup extends FullCachedLookup {
     }
     /**
      * get the query for fully initializing the cache
+     * marker/protein sequences
      * @return the query for fully initializing the cache
      */
     public String getFullInitQuery()
     {
         return
-            "select a.accID as 'proteinAccid', a2.accID as 'markerAccid' ," +
-            "       t.name as 'markerType', m._Marker_key as 'markerKey' " +
-            "from MRK_Marker m, ACC_Accession a, ACC_Accession a2, " +
-            "     MRK_Types t " +
-            "where  a._LogicalDB_key in (41, 13, 27) " +
-            "and a._MGIType_key = 2 " +
-            "and a._Object_key = m._Marker_key " +
-            "and m._Organism_key = 1  " +
-            "and a2._Object_key = m._Marker_key " +
+            "select proteinid = a1.accID, mgiid = a2.accID, markerKey = a2._Object_key " +
+            "from ACC_Accession a1, ACC_Accession a2, MRK_Marker m " +
+            "where a1._LogicalDB_key in (41, 13, 27) " +
+            "and a1._MGIType_key = 2 " +
+            "and a1._Object_key = a2._Object_key " +
             "and a2.private = 0  " +
             "and a2._LogicalDB_key = 1 " +
             "and a2._MGIType_key = 2 " +
             "and a2.preferred = 1 " +
-            "and t._Marker_Type_key = m._Marker_Type_key";
+            "and a1._Object_key = m._Marker_key " +
+            "and m._Organism_key = 1";
 
     }
     /**
@@ -88,10 +86,9 @@ public class ProteinSeqLookup extends FullCachedLookup {
         throws DBException
         {
             Marker marker =
-                new Marker(row.getString("markerAccid"),
-                           row.getString("markerType"),
+                new Marker(row.getString("mgiid"),
                            row.getInt("markerKey").intValue());
-            return new KeyValue(row.getString("proteinAccid"), marker);
+            return new KeyValue(row.getString("proteinid"), marker);
         }
     }
 

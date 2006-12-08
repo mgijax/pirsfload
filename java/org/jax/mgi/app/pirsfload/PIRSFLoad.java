@@ -7,6 +7,7 @@ import org.jax.mgi.shr.ioutils.InputXMLDataFile;
 import org.jax.mgi.shr.ioutils.XMLDataIterator;
 import org.jax.mgi.shr.ioutils.XMLDataInterpreter;
 import org.jax.mgi.shr.ioutils.OutputDataFile;
+import org.jax.mgi.shr.datetime.DateTime;
 import org.jax.mgi.shr.dbutils.BatchProcessor;
 import org.jax.mgi.shr.dla.loader.DLALoader;
 import org.jax.mgi.shr.dla.loader.DLALoaderException;
@@ -125,27 +126,19 @@ public class PIRSFLoad extends DLALoader
         {
             PIRSFSuperFamily sf = (PIRSFSuperFamily)iterator.next();
 
-	    // skip this record
+	    // skip records that have no name, or the name = id
+	    // these are preliminary pirsf superfamilies
 
             if (sf.pirsfID.equals("unset") ||
+                sf.pirsfName.equals("unset") ||
+                sf.pirsfName.equals(sf.pirsfID) ||
                 sf.pirsfName.equals(Constants.NOT_ASSIGNED))
                 continue;
 
-	    // lookup uniprot id in MGI
+	    // lookup markers in MGI
 
             HashSet markers = new HashSet();
-            for (Iterator i = sf.uniprot.iterator(); i.hasNext();)
-            {
-                String protein = (String)i.next();
-                Marker marker = proteinLookup.lookup(protein);
-                if (marker != null)
-                    markers.add(marker);
-            }
-
-	    // if uniprot id cannot be found in MGI, use alternative method
-
-            if (markers.size() == 0)
-                markers = alternativeMap(sf, proteinLookup, entrezGeneLookup);
+            markers = findMGIMarkers(sf, proteinLookup, entrezGeneLookup);
 
 	    // if this PIRSF family does not map to any MGI markers....
 
@@ -259,21 +252,18 @@ public class PIRSFLoad extends DLALoader
 
 	    // write PIRSF term to term file
 
-            VocabularyTerm term =
-                new VocabularyTerm(sf2.pirsfName, sf2.pirsfID);
-
-            termfile.writeln(term.toString());
+            termfile.writeln(sf2.pirsfName + "\t" + sf2.pirsfID + "\tcurrent\t\t\t\t\t");
 
 	    // write PIRSF/Marker association to annotation file
 
             for (Iterator j = markers.iterator(); j.hasNext();)
             {
                 Marker marker = (Marker)j.next();
-                Annotation annotation = new Annotation(sf2.pirsfID,
-                    marker.getAccid(), Constants.JNUMBER, Constants.EVIDENCE,
-                    Constants.LOADNAME);
-                annotfile.writeln(annotation.toString());
-            }
+		annotfile.writeln(sf2.pirsfID + "\t" + marker.getAccid() + "\t" +
+			Constants.JNUMBER + "\t" + Constants.EVIDENCE + "\t" +
+			super.dlaConfig.getJobstreamName() + "\t" +
+			DateTime.getCurrentDate() + "\t");
+	    }
         }
     }
 
@@ -282,20 +272,38 @@ public class PIRSFLoad extends DLALoader
     * looks up Marker in MGI by refseq ID or entrezgene ID
     *
     */
-    private HashSet alternativeMap(PIRSFSuperFamily sf,
+    private HashSet findMGIMarkers(PIRSFSuperFamily sf,
                                    ProteinSeqLookup proteinLookup,
                                    EntrezGeneLookup entrezGeneLookup)
     throws MGIException
     {
         HashSet markers = new HashSet();
 
-        for (Iterator i = sf.refseqID.iterator(); i.hasNext();)
+	// lookup marker by uniprot id
+
+        for (Iterator i = sf.uniprot.iterator(); i.hasNext();)
         {
-            String refseq = (String)i.next();
-            Marker marker = proteinLookup.lookup(refseq);
+            String protein = (String)i.next();
+            Marker marker = proteinLookup.lookup(protein);
             if (marker != null)
                 markers.add(marker);
         }
+
+	// lookup marker by refseq id
+
+        if (markers.size() == 0 && !sf.refseqID.equals("unset"))
+	{
+            for (Iterator i = sf.refseqID.iterator(); i.hasNext();)
+            {
+                String refseq = (String)i.next();
+                Marker marker = proteinLookup.lookup(refseq);
+                if (marker != null)
+                    markers.add(marker);
+	    }
+        }
+
+	// lookup marker by entrezgene id
+
         if (markers.size() == 0 && !sf.entrezID.equals("unset"))
         {
             Marker marker = entrezGeneLookup.lookup(sf.entrezID);
@@ -303,7 +311,6 @@ public class PIRSFLoad extends DLALoader
                 markers.add(marker);
         }
         return markers;
-
     }
 
 
@@ -387,9 +394,4 @@ public class PIRSFLoad extends DLALoader
         }
 
     }
-
-
-
-
-
 }
