@@ -260,7 +260,7 @@ public class PIRSFLoad extends DLALoader
             {
                 Marker marker = (Marker)j.next();
 		annotfile.writeln(sf2.pirsfID + "\t" + marker.getAccid() + "\t" +
-			Constants.JNUMBER + "\t" + Constants.EVIDENCE + "\t" +
+			Constants.JNUMBER + "\t" + Constants.EVIDENCE + "\t\t\t" +
 			super.dlaConfig.getJobstreamName() + "\t" +
 			DateTime.getCurrentDate() + "\t");
 	    }
