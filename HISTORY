@@ -1,3 +1,9 @@
+TAG: pirsfload-tr7683-2
+DATE: 12/11/2006
+STAFF: lec
+CHANGES: TR7683
+- remove temporary fix to translate PIRSFxxxx to SFxxxx
+
 TAG: pirsfload-tr7683-1
 DATE: 12/06/2006
 STAFF: lec

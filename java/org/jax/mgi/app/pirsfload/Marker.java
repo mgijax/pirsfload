@@ -12,19 +12,16 @@ package org.jax.mgi.app.pirsfload;
 public class Marker
 {
     private String accid = null;
-    private String type = null;
     private int key = 0;
 
     /**
      * constructor
      * @param accid the accession id of the marker
-     * @param type the type of marker
      * @param key the databse key of object
      */
-    public Marker(String accid, String type, int key)
+    public Marker(String accid, int key)
     {
         this.accid = accid;
-        this.type = type;
         this.key = key;
     }
 
@@ -35,15 +32,6 @@ public class Marker
     public String getAccid()
     {
         return this.accid;
-    }
-
-    /**
-     * get the type of marker as stored in database
-     * @return the type of marker
-     */
-    public String getType()
-    {
-        return this.type;
     }
 
     /**

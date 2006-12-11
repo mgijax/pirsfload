@@ -6,6 +6,7 @@ import org.jax.mgi.shr.cache.FullCachedLookup;
 import org.jax.mgi.shr.dbutils.SQLDataManager;
 import org.jax.mgi.shr.dbutils.SQLDataManagerFactory;
 import org.jax.mgi.dbs.SchemaConstants;
+import org.jax.mgi.dbs.mgd.LogicalDBConstants;
 import org.jax.mgi.shr.dbutils.RowDataInterpreter;
 import org.jax.mgi.shr.dbutils.DBException;
 import org.jax.mgi.shr.dbutils.RowReference;
@@ -39,45 +40,38 @@ public class EntrezGeneLookup extends FullCachedLookup {
 
     /**
      * look up an associated marker to a given Entrez Gene id
-     * @param egid the Entrez Gene id
+     * @param entrezid the Entrez Gene id
      * @return the associated marker
      * @throws DBException thrown if there is an error accessing the database
      * @throws CacheException thrown if there is an error accessing the
      * configuration
      */
-    public Marker lookup(String egid)
+    public Marker lookup(String entrezid)
     throws DBException, CacheException
     {
-        return (Marker)super.lookupNullsOk(egid);
+        return (Marker)super.lookupNullsOk(entrezid);
     }
 
     /**
      * get the query for fully initializing the cache
+     * mouse markers annotated to EntrezGene
      * @return the initialization query
      */
     public String getFullInitQuery()
     {
         return
-            "select a1.accID as 'entrezGene', a2.accID as 'marker', " +
-            "       t.name as 'markerType', m._Marker_key as 'markerKey' " +
-            "from ACC_AccessionReference r, " +
-            "         ACC_Accession a1, " +
-            "         ACC_Accession a2, " +
-            "         MRK_Marker m, " +
-            "         MRK_Types t " +
-            "where r._Refs_key = " + Constants.EGLOAD_REFSKEY + " " +
-            "and a1._Accession_key = r._Accession_key " +
-            "and a1._LogicalDB_key = " +
-                       Constants.ENTREZ_GENE_LOGICALDB + " " +
+            "select entrezid = a1.accID, mgiid = a2.accID, markerKey = a2._Object_key " +
+            "from ACC_Accession a1, ACC_Accession a2, MRK_Marker m " +
+            "where a1._LogicalDB_key = " + LogicalDBConstants.ENTREZ_GENE + " " +
             "and a1._MGIType_key = 2 " +
             "and a1.preferred = 1 " +
-            "and a2._Object_key = a1._Object_key " +
+            "and a1._Object_key = a2._Object_key " +
             "and a2._MGIType_key = 2 " +
             "and a2._LogicalDB_key = 1 " +
             "and a2.preferred = 1 " +
             "and a2.prefixPart = 'MGI:' " +
-            "and m._Marker_key = a1._Object_key " +
-            "and t._Marker_Type_key = m._Marker_Type_key";
+            "and a1._Object_key = m._Marker_key " +
+	    "and m._Organism_key = 1 ";
     }
 
     /**
@@ -95,10 +89,9 @@ public class EntrezGeneLookup extends FullCachedLookup {
         throws DBException
         {
             Marker marker =
-                new Marker(row.getString("marker"),
-                           row.getString("markerType"),
+                new Marker(row.getString("mgiid"),
                            row.getInt("markerKey").intValue());
-            return new KeyValue(row.getString("entrezGene"), marker);
+            return new KeyValue(row.getString("entrezid"), marker);
         }
     }
 
