@@ -31,7 +31,6 @@ import org.jax.mgi.shr.ioutils.OutputManager;
 
 public class PIRSFLoad extends DLALoader
 {
-    private static final String NOTMAPPED = "NOTMAPPED";
     private static final String DISCREPANCY = "DISCREPANCY";
 
     private ProteinSeqLookup proteinLookup = null;
@@ -115,8 +114,6 @@ public class PIRSFLoad extends DLALoader
     {
         PIRSFInputFile infile = new PIRSFInputFile();
         XMLDataIterator iterator = infile.getIterator();
-        HashMap noMappings = new HashMap();
-        HashSet noMappingsRevised = new HashSet();
 
 	// for each PIRSF record...
 
@@ -126,10 +123,14 @@ public class PIRSFLoad extends DLALoader
         {
             PIRSFSuperFamily sf = (PIRSFSuperFamily)iterator.next();
 
-	    // skip records that have no name, or the name = id
+	    // skip records that have no name
+	    // or the name = id
+	    // or name is any pirsf id
 	    // these are preliminary pirsf superfamilies
 
             if (sf.pirsfID.equals("unset") ||
+		sf.pirsfName.startsWith("SF") ||
+		sf.pirsfName.startsWith("PIRSF") ||
                 sf.pirsfName.equals("unset") ||
                 sf.pirsfName.equals(sf.pirsfID) ||
                 sf.pirsfName.equals(Constants.NOT_ASSIGNED))
@@ -140,37 +141,7 @@ public class PIRSFLoad extends DLALoader
             HashSet markers = new HashSet();
             markers = findMGIMarkers(sf, proteinLookup, entrezGeneLookup);
 
-	    // if this PIRSF family does not map to any MGI markers....
-
-            if (markers.size() == 0)
-            {
-		// store non-mapping information
-
-                if (!noMappingsRevised.contains(sf.pirsfID))
-                {
-                    if (!noMappings.containsKey(sf.pirsfID))
-                    {
-                        NotMapped notMapped = new NotMapped(sf);
-                        noMappings.put(sf.pirsfID, notMapped);
-                    }
-                    else
-                    {
-                        NotMapped notMapped = (NotMapped) noMappings.get(sf.pirsfID);
-                        notMapped.addSequences(sf);
-                    }
-                }
-                else
-                {
-                    String s = null;
-                }
-                continue;
-            }
-
-            if (noMappings.containsKey(sf.pirsfID))
-            {
-                noMappings.remove(sf.pirsfID);
-                noMappingsRevised.add(sf.pirsfID);
-            }
+	    // store pirsf/marker associations
 
             SFMarkerAssoc mapped =
                 (SFMarkerAssoc)superfamilyToMarkerMap.get(sf.pirsfID);
@@ -184,82 +155,55 @@ public class PIRSFLoad extends DLALoader
                 mapped.addMarkers(markers);
             }
 
+	    // store marker/pirsf associations
+
             for (Iterator i = markers.iterator(); i.hasNext();)
             {
-                Marker m = (Marker)i.next();
-                String thisMarkerAccid = m.getAccid();
-                HashSet assocSuperFamilies =
-                    (HashSet)markerToSuperfamilyMap.get(thisMarkerAccid);
-                if (assocSuperFamilies == null)
+                Marker marker = (Marker)i.next();
+                HashSet associatedSFs = (HashSet)markerToSuperfamilyMap.get(marker.getAccid());
+                if (associatedSFs == null)
                 {
                     HashSet set = new HashSet();
                     set.add(sf.pirsfID);
-                    markerToSuperfamilyMap.put(thisMarkerAccid, set);
+                    markerToSuperfamilyMap.put(marker.getAccid(), set);
                 }
                 else
                 {
-                    assocSuperFamilies.add(sf.pirsfID);
+                    associatedSFs.add(sf.pirsfID);
                 }
             }
         } // end of PIRSF records
 
 	super.logger.logInfo("Writing data to Term and Annotation files");
 
-        HashSet knownDiscrepancies = new HashSet();
-        for (Iterator i = noMappings.values().iterator(); i.hasNext();)
-        {
-            NotMapped notMapped = (NotMapped)i.next();
-            OutputManager.writeln(NOTMAPPED, notMapped.toString());
-        }
+	// for each superfamily
 
-	// for each superfamily we want to load into MGI...
-
-        for (Iterator i = superfamilyToMarkerMap.values().iterator();
-             i.hasNext();)
+        for (Iterator i = superfamilyToMarkerMap.values().iterator(); i.hasNext();)
         {
             SFMarkerAssoc mappedSuperfamily = (SFMarkerAssoc)i.next();
-            PIRSFSuperFamily sf2 = mappedSuperfamily.getSuperFamily();
-
-            HashSet markers = mappedSuperfamily.getMarkers();
-            boolean oneToMany = false;
-            for (Iterator j = markers.iterator(); j.hasNext();)
-            {
-                Marker m = (Marker)j.next();
-                HashSet associatedSFs =
-                    (HashSet)this.markerToSuperfamilyMap.get(m.getAccid());
-
-		// if a marker maps to more than one superfamily, flag it
-
-                if (associatedSFs.size() > 1)
-                {
-                    oneToMany = true;
-                    if (!knownDiscrepancies.contains(m.getAccid()))
-                    {
-                        OutputManager.writeln(DISCREPANCY,
-                                              m.getAccid() +
-                                              OutputDataFile.TAB +
-                                              associatedSFs.toString());
-                        knownDiscrepancies.add(m.getAccid());
-                    }
-                    break;
-                }
-            }
-
-	    // skip 1-to-N
-
-            if (oneToMany)
-                continue;
+            PIRSFSuperFamily sf = mappedSuperfamily.getSuperFamily();
+	    HashSet markers = mappedSuperfamily.getMarkers();
 
 	    // write PIRSF term to term file
 
-            termfile.writeln(sf2.pirsfName + "\t" + sf2.pirsfID + "\tcurrent\t\t\t\t\t");
+            termfile.writeln(sf.pirsfName + "\t" + sf.pirsfID + "\tcurrent\t\t\t\t\t");
 
 	    // write PIRSF/Marker association to annotation file
 
             for (Iterator j = markers.iterator(); j.hasNext();)
             {
                 Marker marker = (Marker)j.next();
-		annotfile.writeln(sf2.pirsfID + "\t" + marker.getAccid() + "\t" +
+
+		// if a marker maps to more than one superfamily, skip it
+
+                HashSet associatedSFs = (HashSet)markerToSuperfamilyMap.get(marker.getAccid());
+                if (associatedSFs.size() > 1)
+		{
+                    OutputManager.writeln(DISCREPANCY, marker.getAccid() + OutputDataFile.TAB + associatedSFs.toString());
+		    continue;
+                }
+
+		annotfile.writeln(sf.pirsfID + "\t" + marker.getAccid() + "\t" +
 			Constants.JNUMBER + "\t" + Constants.EVIDENCE + "\t\t\t" +
 			super.dlaConfig.getJobstreamName() + "\t" +
 			DateTime.getCurrentDate() + "\t");
@@ -340,58 +284,5 @@ public class PIRSFLoad extends DLALoader
         {
             return this.markers;
         }
-    }
-
-    private class NotMapped
-    {
-        private String id = null;
-        private String name = null;
-        private HashSet uniprot = new HashSet();
-        private HashSet refseq = new HashSet();
-        private HashSet entrezGene = new HashSet();
-
-        public NotMapped(PIRSFSuperFamily sf)
-        {
-            this.id = sf.pirsfID;
-            this.name = sf.pirsfName;
-            this.uniprot.addAll(sf.uniprot);
-            this.refseq.addAll(sf.refseqID);
-            if (!sf.entrezID.equals("unset"))
-                this.entrezGene.add(sf.entrezID);
-        }
-
-        public void addSequences(PIRSFSuperFamily sf)
-        {
-            this.uniprot.addAll(sf.uniprot);
-            this.refseq.addAll(sf.refseqID);
-            if (!sf.entrezID.equals("unset"))
-                this.entrezGene.add(sf.entrezID);
-        }
-
-        public int hashCode()
-        {
-            return this.id.hashCode();
-        }
-
-        public boolean equals(Object o)
-        {
-            if (!(o instanceof NotMapped))
-                return false;
-            NotMapped notMapped = (NotMapped)o;
-            if (notMapped.id.equals(this.id))
-                return true;
-            else
-                return false;
-        }
-
-        public String toString()
-        {
-            return this.id + OutputDataFile.TAB +
-                this.name + OutputDataFile.TAB +
-                this.uniprot.toString() + OutputDataFile.TAB +
-                this.refseq.toString() + OutputDataFile.TAB +
-                this.entrezGene.toString();
-        }
-
     }
 }
