@@ -145,7 +145,7 @@ fi
 #
 # run qc reports
 #
-${APP_QCRPT} ${RPTDIR} ${MGD_DBSERVER} ${MGD_DBNAME} ${RADAR_DBNAME} ${JOBKEY}
+${APP_QCRPT} ${RPTDIR} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
