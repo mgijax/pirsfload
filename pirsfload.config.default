@@ -133,20 +133,6 @@ export RADAR_BCP_OK_TO_OVERWRITE
 
 ###########################################################################
 #
-#  REPORT SETTINGS
-#
-###########################################################################
-
-FMT_WEB_SERVER_URL=www.informatics.jax.org
-
-DISCREPANCY_OUTFILE_NAME=${RPTDIR}/oneToMany.txt
-DISCREPANCY_OUTFILE_SORT_DEF="-k1"
-DISCREPANCY_OUTFILE_FORMATTERS=org.jax.mgi.app.pirsfload.output.HTMLFormatter_Discrepancy,org.jax.mgi.app.pirsfload.output.ReportFormatter_Discrepancy
-
-DLA_FORMAT_REPORTS_ONLY=false
-
-###########################################################################
-#
 #  VOCLOAD AND ANNOTLOAD SETTINGS
 #
 ###########################################################################

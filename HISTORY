@@ -1,3 +1,9 @@
+TAG: pirsfload-tr7683-5
+DATE: 12/19/2006
+STAFF: lec
+CHANGES: TR7683
+- remove use of java output formater
+
 TAG: pirsfload-tr7683-4
 TAG: pirsfload-tr7683-3
 DATE: 12/13/2006

@@ -31,12 +31,13 @@ import org.jax.mgi.shr.ioutils.OutputManager;
 
 public class PIRSFLoad extends DLALoader
 {
-    private static final String DISCREPANCY = "DISCREPANCY";
-
     private ProteinSeqLookup proteinLookup = null;
     private EntrezGeneLookup entrezGeneLookup = null;
     private OutputDataFile termfile = null;
     private OutputDataFile annotfile = null;
+    private OutputDataFile onetomanyfile = null;
+    private OutputDataFile proteinAssocFile = null;
+    private OutputDataFile egAssocFile = null;
     private HashMap superfamilyToMarkerMap = new HashMap();
     private HashMap markerToSuperfamilyMap = new HashMap();
 
@@ -61,21 +62,21 @@ public class PIRSFLoad extends DLALoader
 
         termfile = new OutputDataFile(basedir + "termfile");
         annotfile = new OutputDataFile(basedir + "annotfile");
+        onetomanyfile = new OutputDataFile(basedir + "oneToMany.txt");
+	proteinAssocFile = new OutputDataFile (basedir + "cache_proteinGeneAssoc.txt");
+	egAssocFile = new OutputDataFile (basedir + "cache_entrezGeneAssoc.txt");
 
         super.logger.logInfo("Initializing cache");
 
         proteinLookup = new ProteinSeqLookup();
         proteinLookup.initCache();
-	OutputDataFile proteinAssocFile = new OutputDataFile (basedir + "cache_proteinGeneAssoc.txt");
 	proteinLookup.printCache(proteinAssocFile);
 	proteinAssocFile.close();
 
         entrezGeneLookup = new EntrezGeneLookup();
         entrezGeneLookup.initCache();
-	OutputDataFile egAssocFile = new OutputDataFile (basedir + "cache_entrezGeneAssoc.txt");
 	entrezGeneLookup.printCache(egAssocFile);
 	egAssocFile.close();
-
     }
     /**
      * closes files
@@ -88,6 +89,7 @@ public class PIRSFLoad extends DLALoader
         super.logger.logInfo("Closing report files");
         termfile.close();
         annotfile.close();
+	onetomanyfile.close();
     }
 
     /**
@@ -199,7 +201,7 @@ public class PIRSFLoad extends DLALoader
                 HashSet associatedSFs = (HashSet)markerToSuperfamilyMap.get(marker.getAccid());
                 if (associatedSFs.size() > 1)
 		{
-                    OutputManager.writeln(DISCREPANCY, marker.getAccid() + OutputDataFile.TAB + associatedSFs.toString());
+                    onetomanyfile.writeln(marker.getAccid() + OutputDataFile.TAB + associatedSFs.toString());
 		    continue;
                 }
 
