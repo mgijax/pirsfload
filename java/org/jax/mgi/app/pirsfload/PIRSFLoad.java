@@ -14,7 +14,6 @@ import org.jax.mgi.shr.dla.loader.DLALoaderException;
 import org.jax.mgi.shr.exception.MGIException;
 import org.jax.mgi.shr.dla.input.pir.PIRSFInputFile;
 import org.jax.mgi.shr.dla.input.pir.PIRSFInputFile.PIRSFSuperFamily;
-import org.jax.mgi.shr.ioutils.OutputManager;
 
 /**
  * is a DLALoader for loading PIRSF superfamilies into the database
