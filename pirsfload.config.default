@@ -74,11 +74,11 @@ OUTPUTDIR=${FILEDIR}/output
 
 export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
 
-INPUTDIR=/data/downloads/ftp.pir.georgetown.edu/iproclass
+INPUTDIR=/data/downloads/ftp.pir.georgetown.edu/iproclass/more_xml_files
 
 INFILE_NAME=STDIN
 
-INPUT_FILENAME=${INPUTDIR}/iproclass.xml.gz
+INPUT_FILENAME=${INPUTDIR}/m_musculus.xml.gz
 
 export INPUTDIR INFILE_NAME INPUT_FILENAME
 
