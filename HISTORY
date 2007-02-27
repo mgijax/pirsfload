@@ -1,7 +1,18 @@
+TAG: pirsfload-3-5-2-0
+DATE: 02/27/2007
+STAFF: dbm
+CHANGES: Merged tr7683 branch to the trunk
+
 TAG: pirsfload-3-5-1-14
 DATE: 01/12/2007
 STAFF: lec
 CHANGES: use new mouse-only pirsf file
+
+TAG: pirsfload-tr7683-7
+DATE: 01/12/2007
+STAFF: lec
+CHANGES: TR7683
+- use new mouse-only pirsf input file
 
 TAG: pirsfload-3-5-1-13
 TAG: pirsfload-3-5-1-12
@@ -14,6 +25,26 @@ DATE: 12/19/2006
 STAFF: lec
 CHANGES: removed all references to html formatting
 
+TAG: pirsfload-tr7683-6
+TAG: pirsfload-tr7683-5
+DATE: 12/19/2006
+STAFF: lec
+CHANGES: TR7683
+- remove use of java output formater
+
+TAG: pirsfload-tr7683-4
+TAG: pirsfload-tr7683-3
+DATE: 12/13/2006
+STAFF: lec
+CHANGES: TR7683
+- remove temporary fix to translate PIRSFxxxx to SFxxxx
+
+TAG: pirsfload-tr7683-2
+DATE: 12/11/2006
+STAFF: lec
+CHANGES: TR7683
+- remove temporary fix to translate PIRSFxxxx to SFxxxx
+
 TAG: pirsfload-3-5-1-10
 TAG: pirsfload-3-5-1-9
 DATE: 12/11/2006
@@ -25,6 +56,12 @@ TAG: pirsfload-3-5-1-7
 DATE: 12/07/2006
 STAFF: lec
 CHANGES: TR8049
+
+TAG: pirsfload-tr7683-1
+DATE: 12/06/2006
+STAFF: lec
+CHANGES: TR7683
+- remove temporary fix to translate PIRSFxxxx to SFxxxx
 
 TAG: pirsfload-tr7683-BP
 DATE: 12/06/2006
