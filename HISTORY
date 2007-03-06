@@ -1,3 +1,8 @@
+TAG: pirsfload-3-5-2-1
+DATE: 03/06/2007
+STAFF: dbm
+CHANGES: Fixed pirsfload.sh to not change PIRSF prefix to SF
+
 TAG: pirsfload-3-5-2-0
 DATE: 02/27/2007
 STAFF: dbm
