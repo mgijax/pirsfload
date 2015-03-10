@@ -107,7 +107,8 @@ preload
 #
 #  Run the load application.
 #
-echo "\n`date`" >> ${LOG_PROC}
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
 echo "Run the PIRSFLoad application" >> ${LOG_PROC}
 /usr/local/bin/gunzip -c ${INPUT_FILENAME}|${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${CONFIG_MASTER},${CONFIG} \
@@ -120,7 +121,8 @@ then
     exit 1
 fi
 
-echo "\n`date`" >> ${LOG_PROC}
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
 echo "Run the Vocabulary load" >> ${LOG_PROC}
 ${VOCLOAD}/runSimpleFullLoadNoArchive.sh ${VOCLOAD_CONFIG} >> ${LOG_PROC}
 STAT=$?
@@ -131,7 +133,8 @@ then
     exit 1
 fi
 
-echo "\n`date`" >> ${LOG_PROC}
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
 echo "Run the Annotation load" >> ${LOG_PROC}
 cd ${OUTPUTDIR} && ${ANNOTLOAD}/annotload.csh ${ANNOTLOAD_CONFIG} >> ${LOG_PROC}
 STAT=$?
