@@ -110,9 +110,10 @@ preload
 echo "" >> ${LOG_PROC}
 echo "`date`" >> ${LOG_PROC}
 echo "Run the PIRSFLoad application" >> ${LOG_PROC}
-/usr/local/bin/gunzip -c ${INPUT_FILENAME}|${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
+gunzip -c ${INPUT_FILENAME}|${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${CONFIG_MASTER},${CONFIG} \
         -DJOBKEY=${JOBKEY} ${DLA_START}
+
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
@@ -121,6 +122,26 @@ then
     exit 1
 fi
 
+#
+# Removal of annotations to pirsf terms
+#
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
+echo "Deleting PIRSF Annotations" >> ${LOG_PROC}
+cd ${OUTPUTDIR}
+${ANNOTLOAD}/annotload.csh ${ANNOTDELETE_CONFIG} >> ${LOG_PROC}
+STAT=$?
+echo $STAT
+if [ ${STAT} -ne 0 ]
+then
+    echo "PIRSFLoad application failed during annotation deletion.  Return status: ${STAT}" >> ${LOG_PROC}
+    postload
+    exit 1
+fi
+
+#
+# Load the PIRSF vocab - full drop/reload
+#
 echo "" >> ${LOG_PROC}
 echo "`date`" >> ${LOG_PROC}
 echo "Run the Vocabulary load" >> ${LOG_PROC}
@@ -133,6 +154,9 @@ then
     exit 1
 fi
 
+#
+# Load the annotations to pirsf terms
+#
 echo "" >> ${LOG_PROC}
 echo "`date`" >> ${LOG_PROC}
 echo "Run the Annotation load" >> ${LOG_PROC}
@@ -148,14 +172,14 @@ fi
 #
 # run qc reports
 #
-${APP_QCRPT} ${RPTDIR} ${JOBKEY}
-STAT=$?
-if [ ${STAT} -ne 0 ]
-then
-    echo "Running QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
-    postload
-    exit 1
-fi
+#${APP_QCRPT} ${RPTDIR} ${JOBKEY}
+#STAT=$?
+#if [ ${STAT} -ne 0 ]
+#then
+#    echo "Running QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
+#    postload
+#    exit 1
+#fi
 
 echo "PIRSFLoad application completed successfully" >> ${LOG_PROC}
 
