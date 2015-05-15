@@ -60,7 +60,7 @@ public class EntrezGeneLookup extends FullCachedLookup {
     public String getFullInitQuery()
     {
         return
-            "select entrezid = a1.accID, mgiid = a2.accID, markerKey = a2._Object_key " +
+            "select a1.accID as entrezid, a2.accID as mgiid, a2._Object_key as markerKey " +
             "from ACC_Accession a1, ACC_Accession a2, MRK_Marker m " +
             "where a1._LogicalDB_key = " + LogicalDBConstants.ENTREZ_GENE + " " +
             "and a1._MGIType_key = 2 " +

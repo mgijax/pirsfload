@@ -58,7 +58,7 @@ public class ProteinSeqLookup extends FullCachedLookup {
     public String getFullInitQuery()
     {
         return
-            "select proteinid = a1.accID, mgiid = a2.accID, markerKey = a2._Object_key " +
+            "select a1.accID as proteinid, a2.accID as mgiid, a2._Object_key as markerKey " +
             "from ACC_Accession a1, ACC_Accession a2, MRK_Marker m " +
             "where a1._LogicalDB_key in (41, 13, 27) " +
             "and a1._MGIType_key = 2 " +
