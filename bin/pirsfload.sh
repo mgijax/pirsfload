@@ -172,6 +172,9 @@ fi
 #
 # run qc reports
 #
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
+echo "Run the QC reports" >> ${LOG_PROC}
 ${PIRSFLOAD}/bin/pirsfloadRpt.sh ${RPTDIR} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
