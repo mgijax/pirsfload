@@ -1,3 +1,15 @@
+TAG: pirsfload-6-0-16-2
+DATE: 04/26/2021
+STAFF: dbm
+CHANGES:
+1) pirsfload.config.default: removed APP_QCRPT
+2) bin/pirsfload.sh: call QC reports in this product
+3) bin/pirsfloadRpt.sh: New - moved from qcreports_db
+4) bin/DuplicateTermNames.py: New - moved from qcreports_db
+5) bin/OtherMarkerTypes.py: New - moved from qcreports_db
+6) bin/PIRSF_NotMapped.sql: New - moved from qcreports_db
+7) bin/PIRSF_Stats.sql: New - moved from qcreports_db
+
 TAG: pirsfload-6-0-16-1
 DATE: 08/27/2020
 STAFF: sc
