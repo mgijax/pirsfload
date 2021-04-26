@@ -172,7 +172,7 @@ fi
 #
 # run qc reports
 #
-${APP_QCRPT} ${RPTDIR} ${JOBKEY}
+${PIRSFLOAD}/bin/pirsfloadRpt.sh ${RPTDIR} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
