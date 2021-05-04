@@ -1,3 +1,9 @@
+TAG: pirsfload-6-0-16-4
+DATE: 05/04/2021
+STAFF: dbm
+CHANGES:
+1) pirsfload.config.default: New input file path
+
 TAG: pirsfload-6-0-16-3
 TAG: pirsfload-6-0-16-2
 DATE: 04/26/2021
