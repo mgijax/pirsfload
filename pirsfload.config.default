@@ -70,7 +70,7 @@ OUTPUTDIR=${FILEDIR}/output
 
 export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
 
-INPUTDIR=/data/downloads/ftp.pir.georgetown.edu/databases/iproclass/more_xml_files
+INPUTDIR=/data/downloads/ftp.proteininformationresource.org/databases/iproclass/more_xml_files
 
 INFILE_NAME=STDIN
 
