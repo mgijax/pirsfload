@@ -110,7 +110,7 @@ preload
 echo "" >> ${LOG_PROC}
 echo "`date`" >> ${LOG_PROC}
 echo "Run the PIRSFLoad application" >> ${LOG_PROC}
-gunzip -c ${INPUT_FILENAME}|${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
+cat ${INPUT_FILENAME}|${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${CONFIG_MASTER},${CONFIG} \
         -DJOBKEY=${JOBKEY} ${DLA_START}
 
@@ -172,10 +172,7 @@ fi
 #
 # run qc reports
 #
-echo "" >> ${LOG_PROC}
-echo "`date`" >> ${LOG_PROC}
-echo "Run the QC reports" >> ${LOG_PROC}
-${PIRSFLOAD}/bin/pirsfloadRpt.sh ${RPTDIR} ${JOBKEY}
+${APP_QCRPT} ${RPTDIR} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then

@@ -128,7 +128,7 @@ public class PIRSFLoad extends DLALoader
 	    // or the name = id
 	    // or name is any pirsf id
 	    // these are preliminary pirsf superfamilies
-
+            super.logger.logInfo("superfamily: " + sf.toString());
             if (sf.pirsfID.equals("unset") ||
 		sf.pirsfName.startsWith("SF") ||
 		sf.pirsfName.startsWith("PIRSF") ||
