@@ -59,7 +59,11 @@ DLA_DB_PREFIX=MGD
 DLA_LOAD_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 DLA_QC_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 
+# QC report script
+APP_QCRPT=${QCRPTS}/pirsfload/pirsfloadRpt.csh
+
 export DLA_LOADER DLA_START DLA_LOAD_STREAM 
+export APP_QCRPT
 
 # Full path the the logs, reports, and archive directories
 FILEDIR=${DATALOADSOUTPUT}/pirsf/pirsfload
@@ -70,11 +74,11 @@ OUTPUTDIR=${FILEDIR}/output
 
 export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
 
-INPUTDIR=/data/downloads/ftp.proteininformationresource.org/databases/iproclass/more_xml_files
+INPUTDIR=${DATADOWNLOADS}/www.uniprot.org/pirsfload
 
 INFILE_NAME=STDIN
 
-INPUT_FILENAME=${INPUTDIR}/m_musculus.xml.gz
+INPUT_FILENAME=${INPUTDIR}/m_musculus.xml
 
 export INPUTDIR INFILE_NAME INPUT_FILENAME
 
