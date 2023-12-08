@@ -36,7 +36,7 @@ PAGE = reportlib.PAGE
 outputDir=sys.argv[1]
 jobKey=sys.argv[2]
 
-fp = reportlib.init(sys.argv[0],  'PIRSFLoad - Duplicate terms loaded into MGD (Job Stream %s)' % (jobKey), outputdir = outputDir, sqlLogging = 0)
+fp = reportlib.init(sys.argv[0],  'PIRSFLoad - Duplicate terms loaded into MGD (Job Stream %s)' % (jobKey), outputdir = outputDir)
 
 fp.write('\tA row in this report represents a superfamily term that is used in more than one superfamily.\n\n')
 fp.write(str.ljust('Term name', 100))

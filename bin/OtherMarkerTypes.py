@@ -36,9 +36,7 @@ PAGE = reportlib.PAGE
 outputDir=sys.argv[1]
 jobKey=sys.argv[2]
 
-fp = reportlib.init(sys.argv[0],  
-                    'PIRSFLoad - Annotations loaded into MGD to markers other than genes (Job Stream %s)' % (jobKey), 
-                    outputdir = outputDir, sqlLogging = 0)
+fp = reportlib.init(sys.argv[0],  'PIRSFLoad - Annotations loaded into MGD to markers other than genes (Job Stream %s)' % (jobKey), outputdir = outputDir)
 
 fp.write('  A row in this report represents an annotation to a marker of type other than gene.' + 2*CRT)
 
