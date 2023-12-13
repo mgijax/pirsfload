@@ -19,7 +19,6 @@
  
 import os
 import sys 
-import string
 import reportlib
 import db
 
