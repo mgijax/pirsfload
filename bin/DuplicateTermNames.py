@@ -1,14 +1,10 @@
-
 '''
 #
 # Report:
-#       This script produces a report of PIRSF superfamily ids 
-#       loaded into MGD with duplicates names
+#       This script produces a report of PIRSF superfamily ids loaded into MGD with duplicates names
 #
 # Usage:
 #       DuplicateTermNames.py
-#
-# Notes:
 #
 # History:
 #
@@ -25,9 +21,6 @@ import db
 #db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
-TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -54,18 +47,18 @@ db.sql('''
       from VOC_Term vt2 
       where vt2._Vocab_key = 46 
       group by vt2.term having count(*) > 1
-    )
-        ''', None)
+   )
+   ''', None)
 
 db.sql('create index idx1 on dupterms(_Term_key)', None)
 
 results = db.sql('''
-        select d.term, a.accID 
-        from dupterms d, ACC_Accession a 
-        where d._Term_key = a ._Object_key 
-        and a._LogicalDB_key = 78 
-        order by d.term
-        ''', 'auto')
+   select d.term, a.accID 
+   from dupterms d, ACC_Accession a 
+   where d._Term_key = a ._Object_key 
+   and a._LogicalDB_key = 78 
+   order by d.term
+   ''', 'auto')
 
 for r in results:
     fp.write(str.ljust(r['term'], 100) + \

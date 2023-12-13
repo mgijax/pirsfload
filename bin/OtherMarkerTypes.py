@@ -1,14 +1,10 @@
-
 '''
 #
 # Report:
-#       This script produces a report of PIRSF superfamily ids 
-#       loaded into MGD with duplicates names
+#       This script produces a report of PIRSF superfamily ids loaded into MGD with duplicates names
 #
 # Usage:
 #       'DuplicateTermNames.py
-#
-# Notes:
 #
 # History:
 #
@@ -25,9 +21,6 @@ import db
 #db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
-TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -78,5 +71,4 @@ for r in results:
              CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
-
 reportlib.finish_nonps(fp)
